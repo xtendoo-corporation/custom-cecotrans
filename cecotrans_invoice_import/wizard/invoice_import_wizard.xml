@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="invoice_import_view" model="ir.ui.view">
+        <field name="name">Cecotrans Invoice Import</field>
+        <field name="model">cecotrans.invoice.import</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Flamero Webservice Import">
+                <h2>Cecotrans Invoice Import</h2>
+                <group>
+                    <field name="import_file" />
+                </group>
+                <footer>
+                    <button
+                        name="action_import_file"
+                        string="Import"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="invoice_import_action" model="ir.actions.act_window">
+        <field name="name">Cecotras Invoice Import</field>
+        <field name="res_model">cecotrans.invoice.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
