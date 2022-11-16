@@ -33,23 +33,38 @@ class CecotransInvoiceImport(models.TransientModel):
     def action_import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         self.ensure_one()
-
         if self.import_file:
-            print("*"*80)
-            print("Import file:", self.import_file)
-            print("*"*80)
+            self._import_record_data(self.import_file)
         else:
             raise ValidationError(_("Please select Excel file to import"))
 
-    def web_service_get(self):
-        result = self.webservice_backend_id.call("get")
+    @api.model
+    def _import_record_data(self, import_file):
+        try:
+            decoded_data = base64.decodebytes(import_file)
+            book = xlrd.open_workbook(file_contents=decoded_data)
+            self._import_sheet(book, 1)  # Sevilla resumen
+            self._import_sheet(book, 4)  # Huelva resumen
+            self._import_sheet(book, 7)  # Pto. Real resumen
+            self._import_sheet(book, 10)  # Jerez resumen
+            self._import_sheet(book, 13)  # Madrid resumen
+            self._import_sheet(book, 16)  # Burgos resumen
+        except xlrd.XLRDError:
+            raise ValidationError(
+                _("Invalid file style, only .xls or .xlsx file allowed")
+            )
+        except Exception as e:
+            raise e
 
-        print("*"*80)
-        print("Result:", result)
-        print("*"*80)
-
-
-
-        # with self.assertRaises(exceptions.ConnectionError):
-        #     self.webservice_backend_id.call("get")
-
+    @api.model
+    def _import_sheet(self, book, sheet):
+        lines = []
+        sheet = book.sheet_by_index(sheet)
+        print("*" * 80)
+        for row in range(3, sheet.nrows):
+            lines.append({"route": "{:.0f}".format(sheet.cell_value(row, 1)), "price": sheet.cell_value(row, 3)})
+        gas = sheet.cell_value(3, 6)
+        print(lines)
+        print(gas)
+        print("*" * 80)
+        return {"lines": lines, "gas": gas}
