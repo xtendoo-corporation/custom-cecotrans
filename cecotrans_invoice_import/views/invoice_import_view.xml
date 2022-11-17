@@ -4,12 +4,38 @@
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
 <odoo>
+
     <menuitem
-        id="invoice_import_menuitem"
+        id="account_invoice_import_menuitem"
         name="Cecotrans Invoice Import"
-        parent="mass_mailing.mass_mailing_configuration"
         action="invoice_import_action"
+        parent="account.menu_finance_receivables"
+        sequence="18"
     />
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">Cecotrans default client</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <div data-key="account" position="inside">
+                <h2>Cecotrans default client</h2>
+                <div class="row mt16 o_settings_container" name="work_organization_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box" id="default_campaign_id_setting">
+                        <div class="o_setting_right_pane">
+                            <label for="cecotrans_partner_id"/>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="cecotrans_partner_id" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
 </odoo>
 
 
