@@ -61,54 +61,70 @@ class CecotransInvoiceImport(models.TransientModel):
         except Exception as e:
             raise e
 
-    @api.model
-    def create_invoice(self, partner_id, book, index_sheet):
-        print("*" * 80)
-        invoice_data = self._import_sheet(book, index_sheet)
-        if invoice_data:
-            invoice = self.env["account.move"].create(
+    def _prepare_invoice_lines(self, invoice_data):
+        lines = []
+        for line in invoice_data['lines']:
+
+            products = self.env["product.template"].search([("name", "=", line["route"]),],limit=1,)
+            taxes = products.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id)
+            if products:
+                lines.append(
+                    {
+                        "product_id": products.id,
+                        "name": products.description_sale,
+                        "account_id": products.property_account_income_id.id,
+                        "price_unit": line["price"],
+                        "tax_ids":[(6, 0, taxes.ids)],
+
+                    }
+            )
+        gasoil_products = self.env["product.template"].search([("name", "=","Cargo clausula gasoil"),],limit=1,)
+        if gasoil_products and lines:
+            lines.append(
                 {
-                    "move_type": "out_invoice",
-                    "partner_id": partner_id,
-                    "date": fields.Date.today(),
-                    "invoice_date": fields.Date.today(),
-                    "currency_id": self.env.company.currency_id,
+                    "product_id": gasoil_products.id,
+                    "name": gasoil_products.description_sale,
+                    "account_id": gasoil_products.property_account_income_id.id,
+                    "price_unit": invoice_data['gas'],
+                    "tax_ids": [(6, 0, taxes.ids)],
                 }
             )
-            for line in invoice_data["lines"]:
-                products = self.env["product.template"].search(
-                    [
-                        ("name", "=", line["route"]),
-                    ],
-                    limit=1,
-                )
-                if products:
+        return lines
 
-                    taxes = products[0].taxes_id.filtered(
-                                lambda tax: tax.company_id == invoice.company_id
-                    )
+    def _prepare_invoice(self, partner_id, invoice_data):
+        """
+        Prepare the dict of values to create the new invoice for a sales order. This method may be
+        overridden to implement custom invoice generation (making sure to call super() to establish
+        a clean extension chain).
+        """
+        self.ensure_one()
+        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
+        if not journal:
+            raise ValidationError(
+                _('Please define an accounting sales journal for the company %s (%s).', self.company_id.name,
+                  self.company_id.id))
+        invoice_lines = self._prepare_invoice_lines(invoice_data)
+        if not invoice_lines:
+            return {}
+        invoice_vals = {
+            'ref': '',
+            'move_type': 'out_invoice',
+            'partner_id': partner_id.id,
+            'journal_id': journal.id,  # company comes from the journal
+            "date": fields.Date.today(),
+            "invoice_date": fields.Date.today(),
+            'invoice_line_ids': invoice_lines,
 
-                    print("taxes:", taxes)
+        }
+        return invoice_vals
 
-                    invoice_line = self.env["account.move.line"].create(
-                        {
-                            "move_id": invoice.id,
-                            "product_id": products[0].id,
-                            "name": products[0].description_sale,
-                            "account_id": products[0].property_account_income_id.id,
-                            "price_unit": line["price"],
-                        }
-                    )
-                    # invoice_line._onchange_product_id()
-
-                    invoice_line._onchange_price_subtotal()
-                    invoice_line._onchange_mark_recompute_taxes()
-
-            print("invoice", invoice)
-
-        print("invoice data lines", invoice_data["lines"])
-        print("invoice data gas", invoice_data["gas"])
-        print("*" * 80)
+    @api.model
+    def create_invoice(self, partner_id, book, index_sheet):
+        invoice_data = self._import_sheet(book, index_sheet)
+        if invoice_data:
+            invoice_hash = self._prepare_invoice(partner_id, invoice_data)
+            if invoice_hash:
+                invoice = self.env["account.move"].create(self._prepare_invoice(partner_id, invoice_data))
 
     @api.model
     def _import_sheet(self, book, index_sheet):
