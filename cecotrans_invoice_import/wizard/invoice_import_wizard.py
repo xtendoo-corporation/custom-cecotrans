@@ -48,12 +48,12 @@ class CecotransInvoiceImport(models.TransientModel):
         try:
             decoded_data = base64.decodebytes(import_file)
             book = xlrd.open_workbook(file_contents=decoded_data)
-            self.create_invoice(partner_id, book, 1)  # Sevilla resumen
-            self.create_invoice(partner_id, book, 4)  # Huelva resumen
-            self.create_invoice(partner_id, book, 7)  # Pto. Real resumen
-            self.create_invoice(partner_id, book, 10)  # Jerez resumen
-            self.create_invoice(partner_id, book, 13)  # Madrid resumen
-            self.create_invoice(partner_id, book, 16)  # Burgos resumen
+            self.create_invoice(partner_id, book, 1, 'Sevilla')  # Sevilla resumen
+            self.create_invoice(partner_id, book, 4, 'Huelva')  # Huelva resumen
+            self.create_invoice(partner_id, book, 7, 'Puerto Real')  # Pto. Real resumen
+            self.create_invoice(partner_id, book, 10, 'Jerez')  # Jerez resumen
+            self.create_invoice(partner_id, book, 13, 'Madrid')  # Madrid resumen
+            self.create_invoice(partner_id, book, 16, 'Burgos')  # Burgos resumen
         except xlrd.XLRDError:
             raise ValidationError(
                 _("Invalid file style, only .xls or .xlsx file allowed")
@@ -64,73 +64,78 @@ class CecotransInvoiceImport(models.TransientModel):
     def _prepare_invoice_lines(self, invoice_data):
         lines = []
         for line in invoice_data['lines']:
-
-            products = self.env["product.template"].search([("name", "=", line["route"]),],limit=1,)
-            taxes = products.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id)
-            if products:
+            product = self.env["product.template"].search([("name", "=", line["route"])], limit=1)
+            taxes = product.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id)
+            if product:
                 lines.append(
                     {
-                        "product_id": products.id,
-                        "name": products.description_sale,
-                        "account_id": products.property_account_income_id.id,
+                        "product_id": product.id,
+                        "name": product.description_sale,
+                        "account_id": product.property_account_income_id.id,
                         "price_unit": line["price"],
-                        "tax_ids":[(6, 0, taxes.ids)],
-
+                        "tax_ids": [(6, 0, taxes.ids)],
                     }
+                )
+        if not lines:
+            raise ValidationError(
+                _('No lines get from Excel file to import in this invoice.')
             )
-        gasoil_products = self.env["product.template"].search([("name", "=","Cargo clausula gasoil"),],limit=1,)
-        if gasoil_products and lines:
+        gas_product = self.env["product.template"].search([("name", "=", "GAS")], limit=1)
+        if gas_product:
             lines.append(
                 {
-                    "product_id": gasoil_products.id,
-                    "name": gasoil_products.description_sale,
-                    "account_id": gasoil_products.property_account_income_id.id,
+                    "product_id": gas_product.id,
+                    "name": gas_product.description_sale,
+                    "account_id": gas_product.property_account_income_id.id,
                     "price_unit": invoice_data['gas'],
                     "tax_ids": [(6, 0, taxes.ids)],
                 }
             )
         return lines
 
-    def _prepare_invoice(self, partner_id, invoice_data):
-        """
-        Prepare the dict of values to create the new invoice for a sales order. This method may be
-        overridden to implement custom invoice generation (making sure to call super() to establish
-        a clean extension chain).
-        """
+    def _prepare_invoice(self, partner_id, invoice_data, ref):
         self.ensure_one()
         journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
         if not journal:
             raise ValidationError(
                 _('Please define an accounting sales journal for the company %s (%s).', self.company_id.name,
-                  self.company_id.id))
+                  self.company_id.id)
+            )
         invoice_lines = self._prepare_invoice_lines(invoice_data)
         if not invoice_lines:
-            return {}
+            raise ValidationError(
+                _('No lines to import in this invoice.')
+            )
         invoice_vals = {
-            'ref': '',
             'move_type': 'out_invoice',
+            'ref': ref,
             'partner_id': partner_id.id,
             'journal_id': journal.id,  # company comes from the journal
             "date": fields.Date.today(),
             "invoice_date": fields.Date.today(),
             'invoice_line_ids': invoice_lines,
-
         }
         return invoice_vals
 
     @api.model
-    def create_invoice(self, partner_id, book, index_sheet):
+    def create_invoice(self, partner_id, book, index_sheet, ref):
         invoice_data = self._import_sheet(book, index_sheet)
-        if invoice_data:
-            invoice_hash = self._prepare_invoice(partner_id, invoice_data)
-            if invoice_hash:
-                invoice = self.env["account.move"].create(self._prepare_invoice(partner_id, invoice_data))
+        if not invoice_data:
+            return
+        invoice_hash = self._prepare_invoice(partner_id, invoice_data, ref)
+        if invoice_hash:
+            self.env["account.move"].create(invoice_hash)
 
     @api.model
     def _import_sheet(self, book, index_sheet):
         lines = []
         sheet = book.sheet_by_index(index_sheet)
         for row in range(3, sheet.nrows):
-            lines.append({"route": "{:.0f}".format(sheet.cell_value(row, 1)), "price": sheet.cell_value(row, 3)})
+            lines.append(
+                {
+                    "route": "{:.0f}".format(sheet.cell_value(row, 1)),
+                    "price": sheet.cell_value(row, 3),
+                }
+            )
         gas = sheet.cell_value(3, 6)
         return {"lines": lines, "gas": gas}

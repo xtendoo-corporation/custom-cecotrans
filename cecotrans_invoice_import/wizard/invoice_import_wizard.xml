@@ -6,7 +6,6 @@
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Cecontrans Invoice Import">
-                <h2>Cecotrans Invoice Import</h2>
                 <group>
                     <field name="import_file" />
                 </group>
