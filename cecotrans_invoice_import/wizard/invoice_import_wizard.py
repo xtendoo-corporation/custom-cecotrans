@@ -83,17 +83,20 @@ class CecotransInvoiceImport(models.TransientModel):
             raise ValidationError(
                 _('No lines get from Excel file to import in this invoice.')
             )
-        gas_product = self.env["product.template"].search([("name", "=", "GAS")], limit=1)
-        if gas_product:
-            lines.append(
-                {
-                    "product_id": gas_product.id,
-                    "name": gas_product.description_sale,
-                    "account_id": gas_product.property_account_income_id.id,
-                    "price_unit": invoice_data['gas'],
-                    "tax_ids": [(6, 0, taxes.ids)],
-                }
+        gas_product = self.env["product.template"].search([("default_code", "=", "GAS")], limit=1)
+        if not gas_product:
+            raise ValidationError(
+                _('No Gas product found, please correct.')
             )
+        lines.append(
+            {
+                "product_id": gas_product.id,
+                "name": gas_product.description_sale,
+                "account_id": gas_product.property_account_income_id.id,
+                "price_unit": invoice_data['gas'],
+                "tax_ids": [(6, 0, taxes.ids)],
+            }
+        )
         return lines
 
     def _prepare_invoice(self, partner_id, invoice_data, ref):
