@@ -65,17 +65,20 @@ class CecotransInvoiceImport(models.TransientModel):
         lines = []
         for line in invoice_data['lines']:
             product = self.env["product.template"].search([("name", "=", line["route"])], limit=1)
-            taxes = product.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id)
-            if product:
-                lines.append(
-                    {
-                        "product_id": product.id,
-                        "name": product.description_sale,
-                        "account_id": product.property_account_income_id.id,
-                        "price_unit": line["price"],
-                        "tax_ids": [(6, 0, taxes.ids)],
-                    }
+            if not product:
+                raise ValidationError(
+                    _('Product not found, %s please correct this.' % line["route"])
                 )
+            taxes = product.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id)
+            lines.append(
+                {
+                    "product_id": product.id,
+                    "name": product.description_sale,
+                    "account_id": product.property_account_income_id.id,
+                    "price_unit": line["price"],
+                    "tax_ids": [(6, 0, taxes.ids)],
+                }
+            )
         if not lines:
             raise ValidationError(
                 _('No lines get from Excel file to import in this invoice.')
@@ -121,7 +124,9 @@ class CecotransInvoiceImport(models.TransientModel):
     def create_invoice(self, partner_id, book, index_sheet, ref):
         invoice_data = self._import_sheet(book, index_sheet)
         if not invoice_data:
-            return
+            raise ValidationError(
+                _('No invoice data getting sheet.')
+            )
         invoice_hash = self._prepare_invoice(partner_id, invoice_data, ref)
         if invoice_hash:
             self.env["account.move"].create(invoice_hash)
