@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template
+            id="document_format_cecotrans.external_layout_clean_cecotrans"
+            inherit_id="web.external_layout_bold"
+        >
+            <xpath expr="//div[hasclass('o_clean_header')]" position="replace">
+                <div class="o_clean_header">
+                    <div class="row">
+                        <div class="col-5">
+                            <img
+                                t-if="company.logo"
+                                t-att-src="image_data_uri(company.logo)"
+                                alt="Logo"
+                                style="max-height:200px"
+                            />
+                        </div>
+                        <div class="col-6 offset-1" name="company_address">
+                            <ul class="list-unstyled">
+                                <strong>
+                                    <li t-if="company.name">
+                                        <span t-field="company.name" />
+                                    </li>
+                                </strong>
+                                <li t-if="company.street">
+                                    <span t-field="company.street" />
+                                </li>
+                                <li t-if="company.street2">
+                                    <span t-field="company.street2" />
+                                </li>
+                                <li>
+                                    <span t-if="company.city" t-field="company.city" />
+                                    , <span t-if="company.zip" t-field="company.zip" />
+                                     <span t-if="company.state_id" t-field="company.state_id" />
+                                </li>
+                                <li t-if="company.vat">
+                                    <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
+                                    <span t-field="company.vat" />
+                                </li>
+                                <t t-if="partner_id.comment">
+                                    <span t-esc="partner_id.comment"></span>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="height:2px;width:100%;background-color:black;margin-top:2px;"
+                >
+                </div>
+            </xpath>
+            <xpath expr="//div[3]" position="replace">
+                <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline mb4">
+                            <div t-field="company.report_footer"/>
+                        </ul>
+                        <div t-if="report_type == 'pdf'" class="text-muted">
+                            Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

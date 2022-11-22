@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template
+            id="document_format_cecotrans.report_purchaseorder_document_cecotrans"
+            inherit_id="purchase.report_purchasequotation_document"
+        >
+            <xpath expr="//div[hasclass('page')]" position="inside">
+                <t t-set="partner_id" t-value="o.partner_id"></t>
+            </xpath>
+        </template>
+    </data>
+</odoo>
