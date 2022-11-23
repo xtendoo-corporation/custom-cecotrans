@@ -34,7 +34,8 @@
                                 <li>
                                     <span t-if="company.city" t-field="company.city" />
                                     , <span t-if="company.zip" t-field="company.zip" />
-                                     <span t-if="company.state_id" t-field="company.state_id" />
+                                     <span t-if="company.state_id" t-field="company.state_id.name" />,
+                                    <span t-if="company.country_id" t-field="company.country_id.name" />
                                 </li>
                                 <li t-if="company.vat">
                                     <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
@@ -64,7 +65,8 @@
                                 <li>
                                     <span t-if="partner_id.city" t-field="partner_id.city" />
                                     , <span t-if="partner_id.zip" t-field="partner_id.zip" />
-                                     <span t-if="partner_id.state_id" t-field="partner_id.state_id" />
+                                     <span t-if="partner_id.state_id" t-field="partner_id.state_id.name" />,
+                                     <span t-if="partner_id.country_id" t-field="partner_id.country_id.name" />
                                 </li>
                                 <li t-if="partner_id.vat">
                                     <t t-esc="partner_id.country_id.vat_label or 'Tax ID'"/>

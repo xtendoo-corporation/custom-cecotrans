@@ -11,6 +11,14 @@
             <xpath expr="//t[@t-set='address']" position="replace">
 
             </xpath>
+            <xpath expr="//div[@name='customer_code']" position="replace">
+
+            </xpath>
+            <xpath expr="//p[@name='payment_communication']" position="replace">
+                <p style="margin-top:40px;" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
+                        Por favor utilice la siguiente referencia al realizar su pago: <b><span t-field="o.payment_reference"/></b>
+                    </p>
+            </xpath>
             <xpath expr="//th[@name='th_priceunit']" position="replace">
                 <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Precio</span></th>
             </xpath>
