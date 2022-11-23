@@ -8,6 +8,7 @@
             <xpath expr="//div[hasclass('page')]" position="inside">
                 <t t-set="partner_id" t-value="o.partner_id"></t>
             </xpath>
+
         </template>
     </data>
 </odoo>

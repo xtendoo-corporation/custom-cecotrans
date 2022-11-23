@@ -8,16 +8,18 @@
             <xpath expr="//div[hasclass('o_clean_header')]" position="replace">
                 <div class="o_clean_header">
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-3">
                             <img
                                 t-if="company.logo"
                                 t-att-src="image_data_uri(company.logo)"
                                 alt="Logo"
-                                style="max-height:200px"
+                                style="max-height:150px"
                             />
                         </div>
-                        <div class="col-6 offset-1" name="company_address">
-                            <ul class="list-unstyled">
+                        <div class="col-8 offset-1" name="company_address" style="font-size:0.85em;">
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-unstyled">
                                 <strong>
                                     <li t-if="company.name">
                                         <span t-field="company.name" />
@@ -42,6 +44,35 @@
                                     <span t-esc="partner_id.comment"></span>
                                 </t>
                             </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                             <strong>
+                                                <span>Cliente</span>
+                                             </strong>
+                                        </li>
+                                    <li t-if="partner_id.name">
+                                        <span t-field="partner_id.name" />
+                                    </li>
+                                     <li t-if="partner_id.street">
+                                    <span t-field="partner_id.street" />
+                                </li>
+                                     <li t-if="partner_id.street2">
+                                    <span t-field="partner_id.street2" />
+                                </li>
+                                <li>
+                                    <span t-if="partner_id.city" t-field="partner_id.city" />
+                                    , <span t-if="partner_id.zip" t-field="partner_id.zip" />
+                                     <span t-if="partner_id.state_id" t-field="partner_id.state_id" />
+                                </li>
+                                <li t-if="partner_id.vat">
+                                    <t t-esc="partner_id.country_id.vat_label or 'Tax ID'"/>
+                                    <span t-field="partner_id.vat" />
+                                </li>
+                            </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
