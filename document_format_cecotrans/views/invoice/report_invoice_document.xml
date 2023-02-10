@@ -89,6 +89,12 @@
                         </tbody>
             </xpath>
 
+            <xpath expr="//p[@name='payment_communication']" position="before">
+                <span style="display:block;">Forma de pago: transferencia</span>
+                <span style="display:block;">Banco: BANKINTER</span>
+                <span style="display:block;">IBAN: ES93 0128 6701 22 0100006797</span>
+            </xpath>
+
         </template>
     </data>
 </odoo>
