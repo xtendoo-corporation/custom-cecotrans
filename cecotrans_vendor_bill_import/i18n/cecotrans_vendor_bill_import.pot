@@ -1,0 +1,117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* cecotrans_vendor_bill_import
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-09 10:18+0000\n"
+"PO-Revision-Date: 2023-03-09 10:18+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: cecotrans_vendor_bill_import
+#: model_terms:ir.ui.view,arch_db:cecotrans_vendor_bill_import.vendor_bill_import_view
+msgid "Cancel"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model_terms:ir.ui.view,arch_db:cecotrans_vendor_bill_import.vendor_bill_import_view
+msgid "Cecontrans Vendor Bill Import"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model,name:cecotrans_vendor_bill_import.model_cecotrans_vendor_bill_import
+msgid "Cecotrans Invoice Import"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.actions.act_window,name:cecotrans_vendor_bill_import.vendor_bill_import_action
+#: model:ir.ui.menu,name:cecotrans_vendor_bill_import.account_vendor_bill_import_menuitem
+msgid "Cecotrans Vendor Bill Import"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__id
+msgid "ID"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model_terms:ir.ui.view,arch_db:cecotrans_vendor_bill_import.vendor_bill_import_view
+msgid "Import"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__import_file
+msgid "Import File (*.xlsx)"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: code:addons/cecotrans_vendor_bill_import/wizard/vendor_bill_import_wizard.py:0
+#, python-format
+msgid "Invalid file style, only .xls or .xlsx file allowed"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: code:addons/cecotrans_vendor_bill_import/wizard/vendor_bill_import_wizard.py:0
+#, python-format
+msgid "No lines get from Excel file to import in this invoice."
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: code:addons/cecotrans_vendor_bill_import/wizard/vendor_bill_import_wizard.py:0
+#, python-format
+msgid "Please define an accounting sales journal for the company %s (%s)."
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: code:addons/cecotrans_vendor_bill_import/wizard/vendor_bill_import_wizard.py:0
+#, python-format
+msgid "Please select Excel file to import"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: code:addons/cecotrans_vendor_bill_import/wizard/vendor_bill_import_wizard.py:0
+#, python-format
+msgid "Product not found, %s please correct this.route"
+msgstr ""
+
+#. module: cecotrans_vendor_bill_import
+#: model:ir.model.fields,field_description:cecotrans_vendor_bill_import.field_cecotrans_vendor_bill_import__webservice_backend_id
+msgid "Webservice Backend"
+msgstr ""

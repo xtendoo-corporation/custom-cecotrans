@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="vendor_bill_import_view" model="ir.ui.view">
+        <field name="name">Cecotrans Vendor Bill Import</field>
+        <field name="model">cecotrans.vendor.bill.import</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Cecontrans Vendor Bill Import">
+                <group>
+                    <field name="import_file" />
+                </group>
+                <footer>
+                    <button
+                        name="action_import_file"
+                        string="Import"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="vendor_bill_import_action" model="ir.actions.act_window">
+        <field name="name">Cecotrans Vendor Bill Import</field>
+        <field name="res_model">cecotrans.vendor.bill.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Copyright 2022 Manuel Calero - https://xtendoo.es
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <menuitem
+        id="account_vendor_bill_import_menuitem"
+        name="Cecotrans Vendor Bill Import"
+        action="vendor_bill_import_action"
+        parent="account.menu_finance_payables"
+        sequence="18"
+    />
+
+</odoo>
+
+
