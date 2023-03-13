@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="example_email_template" model="mail.template">
+            <field name="name">Ejemplo de e-mail template</field>
+            <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
+            <field name="subject">{{ object.company_id.name }} Factura (Ref {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{  object.partner_id.id }}</field>
+            <field name="lang">{{object.partner_id.lang}}</field>
+            <field name="report_template"></field>
+            <field name="report_name">Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="report_template" ref="account.account_invoices"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                    <div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Estimado
+        <t t-if="object.partner_id.parent_id">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br><br>
+        Aquí está su
+        <t t-if="object.name">
+            factura <strong t-out="object.name or ''">INV/2021/05/0005</strong>
+        </t>
+        <t t-else="">
+            factura
+        </t>
+        <t t-if="object.invoice_origin">
+            (con referencia: <t t-out="object.invoice_origin or ''">SUB003</t>)
+        </t>
+        por el importe de <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</strong>
+        realizada por <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br><br>
+         No dude en contactarnos si tiene alguna pregunta.
+    </p>
+</div>
+
+				]]>
+            </field>
+        </record>
+    </data>
+</odoo>

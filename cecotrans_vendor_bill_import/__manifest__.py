@@ -17,7 +17,8 @@
     "data": [
         "security/ir.model.access.csv",
         "wizard/vendor_bill_import_wizard.xml",
-        "views/vendor_bill_import_view.xml"
+        "views/vendor_bill_import_view.xml",
+        "views/mail_template.xml",
     ],
     "application": True,
     "installable": True,

@@ -34,7 +34,9 @@ class CecotransVendorBillImport(models.TransientModel):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         self.ensure_one()
         if self.import_file:
-            self._import_record_data(self.import_file)
+            invoice_create_ids = self._import_record_data(self.import_file)
+            for invoice in invoice_create_ids:
+                invoice.send_vendor_bill_mail_template()
         else:
             raise ValidationError(_("Please select Excel file to import"))
 
@@ -44,6 +46,7 @@ class CecotransVendorBillImport(models.TransientModel):
         book = xlrd.open_workbook(file_contents=decoded_data)
         sh = book.sheet_by_index(0)
         lines_num = []
+        invoice_create_ids = []
         for row in range(sh.nrows):
             if row != 0:
                 nif = sh.cell_value(rowx=row, colx=1)
@@ -57,13 +60,15 @@ class CecotransVendorBillImport(models.TransientModel):
                 else:
                     lines_num.append(row)
                     partner_id = self.env["res.partner"].search([('vat', '=', nif)]).exists()
-                    vendor_bill_date_cell = sh.cell_value(row, 2)
+                    vendor_bill_date_cell = sh.cell_value(row, 3)
                     year, month, day, hour, minute, second = xlrd.xldate_as_tuple(vendor_bill_date_cell,
                                                                                   book.datemode)
                     vendor_bill_date = datetime(year, month, day)
 
                     try:
-                        self.create_vendor_bill(partner_id, nif, sh, lines_num, vendor_bill_date)
+                        invoice_create = self.create_vendor_bill(partner_id, nif, sh, lines_num, vendor_bill_date)
+                        if invoice_create:
+                            invoice_create_ids.append(invoice_create)
                     except xlrd.XLRDError:
                         raise ValidationError(
                             _("Invalid file style, only .xls or .xlsx file allowed")
@@ -71,19 +76,26 @@ class CecotransVendorBillImport(models.TransientModel):
                     except Exception as e:
                         raise e
                     lines_num= []
+        return invoice_create_ids
 
     @api.model
     def create_vendor_bill(self, partner_id, nif, sh, lines_num, vendor_bill_date):
-        vendor_bill_lines = self._prepare_vendor_bill_lines(sh, lines_num)
+        vendor_bill_lines = self._prepare_vendor_bill_lines(sh, lines_num, partner_id)
         ref = self.get_vendor_bill_ref(partner_id)
         invoice_hash = self._prepare_vendor_bill(partner_id, vendor_bill_lines, ref, vendor_bill_date)
         if invoice_hash:
-            self.env["account.move"].create(invoice_hash)
+            invoice_create = self.env["account.move"].create(invoice_hash)
+            invoice_create._onchange_partner_id()
+            invoice_create.action_post()
+            return invoice_create
+        return
 
-    def _prepare_vendor_bill_lines(self, sh, lines):
+
+
+    def _prepare_vendor_bill_lines(self, sh, lines, partner_id):
         vendor_bill_lines = []
         for line in lines:
-            product_name = sh.cell_value(rowx=line, colx=3)
+            product_name = sh.cell_value(rowx=line, colx=4)
             if "Importe transporte" in product_name:
                 product = self.env["product.template"].search([("name", "=", "Importe transporte")], limit=1)
             else:
@@ -92,16 +104,20 @@ class CecotransVendorBillImport(models.TransientModel):
                 raise ValidationError(
                     _('Product not found, %s please correct this.' % line["route"])
                 )
-            taxes = product.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id)
-            price_unit = sh.cell_value(rowx=line, colx=5)
-            quantity = sh.cell_value(rowx=line, colx=4)
+            taxes = self.env["account.fiscal.position"].search([("name", "=", partner_id.property_account_position_id.name)], limit=1)
+            if taxes:
+                taxes_ids = taxes.tax_ids.filtered(lambda tax: tax.company_id == self.env.user.company_id and tax.tax_src_id == product.supplier_taxes_id).tax_dest_id
+            else:
+                taxes_ids = product.supplier_taxes_id
+            price_unit = sh.cell_value(rowx=line, colx=6)
+            quantity = sh.cell_value(rowx=line, colx=5)
             vendor_bill_lines.append(
                     {
                         "product_id": product.id,
                         "name": product_name,
                         "account_id": product.property_account_income_id.id,
                         "price_unit": price_unit,
-                        "tax_ids": [(6, 0, taxes.ids)],
+                        "tax_ids": [(6, 0, taxes_ids.ids)],
                         "quantity": quantity,
                     }
                 )
@@ -148,6 +164,7 @@ class CecotransVendorBillImport(models.TransientModel):
                 self.env["ir.sequence"].next_by_code(partner_id.name) or "/"
             )
         return ref
+
 
 
 
