@@ -1,11 +1,10 @@
 <?xml version="1.0" ?>
 <odoo>
     <data>
-        <template
-            id="document_format_cecotrans.external_layout_clean_cecotrans"
-            inherit_id="web.external_layout_bold"
-        >
-            <xpath expr="//div[hasclass('o_clean_header')]" position="replace">
+        <template id="document_format_cecotrans.layout_auto_invoice_cecotrans">
+            <t t-name="document_format_cecotrans.layout_auto_invoice_cecotrans">
+
+                 <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
                 <div class="o_clean_header">
                     <div class="row">
                         <div class="col-3">
@@ -84,9 +83,14 @@
                     style="height:2px;width:100%;background-color:black;margin-top:2px;"
                 >
                 </div>
-            </xpath>
-            <xpath expr="//div[3]" position="replace">
-                <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+        </div>
+
+        <div t-attf-class="article o_report_layout_bold o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else ('/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else '') }});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                     <div class="text-center" style="border-top: 1px solid black;">
                         <ul class="list-inline mb4">
                             <div t-field="company.report_footer"/>
@@ -99,7 +103,7 @@
                         </div>
                     </div>
                 </div>
-            </xpath>
+            </t>
         </template>
     </data>
 </odoo>

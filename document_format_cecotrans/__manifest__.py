@@ -10,16 +10,22 @@
     "license": "AGPL-3",
     "depends": [
         "base",
-        "web"
+        "web",
+        "account",
+        "purchase",
+        "sale",
+        "stock",
     ],
     "data": [
         "views/layout/external_layout_clean.xml",
+        "views/layout/external_layout_bold_autoinvoice.xml",
         "views/sale/sale_order_views.xml",
         "views/purchase/purchase_order_views.xml",
         "views/purchase/purchase_quotation_views.xml",
         "views/stock/report_picking_views.xml",
         "views/stock/report_delivery_document.xml",
         "views/invoice/report_invoice_document.xml",
+        "views/invoice/report_autoinvoice_document.xml",
     ],
     "installable": True,
     "auto_install": False,
