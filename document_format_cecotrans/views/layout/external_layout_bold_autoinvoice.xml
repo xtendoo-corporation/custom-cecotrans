@@ -4,93 +4,94 @@
         <template id="document_format_cecotrans.layout_auto_invoice_cecotrans">
             <t t-name="document_format_cecotrans.layout_auto_invoice_cecotrans">
 
-                 <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-                <div class="o_clean_header">
-                    <div class="row">
-                        <div class="col-3">
-                            <img
-                                t-if="company.logo"
-                                t-att-src="image_data_uri(company.logo)"
-                                alt="Logo"
-                                style="max-height:150px"
-                            />
-                        </div>
-                        <div class="col-8 offset-1" name="company_address" style="font-size:0.85em;">
-                            <div class="row">
-                                <div class="col-6">
-                                    <ul class="list-unstyled">
-                                        <strong>
-                                            <li t-if="company.name">
-                                                <span t-field="company.name"/>
-                                            </li>
-                                        </strong>
-                                        <li t-if="company.street">
-                                            <span t-field="company.street"/>
-                                        </li>
-                                        <li t-if="company.street2">
-                                            <span t-field="company.street2"/>
-                                        </li>
-                                        <li>
-                                            <span t-if="company.city" t-field="company.city"/>
-                                            ,
-                                            <span t-if="company.zip" t-field="company.zip"/>
-                                            <span t-if="company.state_id" t-field="company.state_id.name"/>,
-                                            <span t-if="company.country_id" t-field="company.country_id.name"/>
-                                        </li>
-                                        <li t-if="company.vat">
-                                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
-                                            <span t-field="company.vat"/>
-                                        </li>
-                                        <t t-if="partner_id.comment">
-                                            <span t-esc="partner_id.comment"></span>
-                                        </t>
-                                    </ul>
-                                </div>
-                                <div class="col-6">
-                                    <ul class="list-unstyled">
-                                        <li>
+                <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                    <div class="o_clean_header">
+                        <div class="row">
+                            <div class="col-3">
+                                <img
+                                    t-if="company.logo"
+                                    t-att-src="image_data_uri(company.logo)"
+                                    alt="Logo"
+                                    style="max-height:150px"
+                                />
+                            </div>
+                            <div class="col-8 offset-1" name="company_address" style="font-size:0.85em;">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <ul class="list-unstyled">
                                             <strong>
-                                                <span>Cliente</span>
+                                                <li t-if="company.name">
+                                                    <span t-field="company.name"/>
+                                                </li>
                                             </strong>
-                                        </li>
-                                        <li t-if="partner_id.name">
-                                            <span t-field="partner_id.name"/>
-                                        </li>
-                                        <li t-if="partner_id.street">
-                                            <span t-field="partner_id.street"/>
-                                        </li>
-                                        <li t-if="partner_id.street2">
-                                            <span t-field="partner_id.street2"/>
-                                        </li>
-                                        <li>
-                                            <span t-if="partner_id.city" t-field="partner_id.city"/>
-                                            ,
-                                            <span t-if="partner_id.zip" t-field="partner_id.zip"/>
-                                            <span t-if="partner_id.state_id" t-field="partner_id.state_id.name"/>,
-                                            <span t-if="partner_id.country_id" t-field="partner_id.country_id.name"/>
-                                        </li>
-                                        <li t-if="partner_id.vat">
-                                            <t t-esc="partner_id.country_id.vat_label or 'Tax ID'"/>
-                                            <span t-field="partner_id.vat"/>
-                                        </li>
-                                    </ul>
+                                            <li t-if="company.street">
+                                                <span t-field="company.street"/>
+                                            </li>
+                                            <li t-if="company.street2">
+                                                <span t-field="company.street2"/>
+                                            </li>
+                                            <li>
+                                                <span t-if="company.city" t-field="company.city"/>
+                                                ,
+                                                <span t-if="company.zip" t-field="company.zip"/>
+                                                <span t-if="company.state_id" t-field="company.state_id.name"/>,
+                                                <span t-if="company.country_id" t-field="company.country_id.name"/>
+                                            </li>
+                                            <li t-if="company.vat">
+                                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
+                                                <span t-field="company.vat"/>
+                                            </li>
+                                            <t t-if="partner_id.comment">
+                                                <span t-esc="partner_id.comment"></span>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <strong>
+                                                    <span>Proveedor</span>
+                                                </strong>
+                                            </li>
+                                            <li t-if="partner_id.name">
+                                                <span t-field="partner_id.name"/>
+                                            </li>
+                                            <li t-if="partner_id.street">
+                                                <span t-field="partner_id.street"/>
+                                            </li>
+                                            <li t-if="partner_id.street2">
+                                                <span t-field="partner_id.street2"/>
+                                            </li>
+                                            <li>
+                                                <span t-if="partner_id.city" t-field="partner_id.city"/>
+                                                ,
+                                                <span t-if="partner_id.zip" t-field="partner_id.zip"/>
+                                                <span t-if="partner_id.state_id" t-field="partner_id.state_id.name"/>,
+                                                <span t-if="partner_id.country_id"
+                                                      t-field="partner_id.country_id.name"/>
+                                            </li>
+                                            <li t-if="partner_id.vat">
+                                                <t t-esc="partner_id.country_id.vat_label or 'Tax ID'"/>
+                                                <span t-field="partner_id.vat"/>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
                 </div>
+
                 <div
-                    style="height:2px;width:100%;background-color:black;margin-top:2px;"
-                >
+                    t-attf-class="article o_report_layout_bold o company#{company.id}_layout {{ 'o_layout_background' if company.layout_background in ['Geometric', 'Custom'] else '' }}"
+                    t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else ('/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else '') }});"
+                    t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                    t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-call="web.address_layout"/>
+                    <t t-out="0"/>
                 </div>
-        </div>
-
-        <div t-attf-class="article o_report_layout_bold o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else ('/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else '') }});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
-            <t t-out="0"/>
-        </div>
-
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                     <div class="text-center" style="border-top: 1px solid black;">
                         <ul class="list-inline mb4">
                             <div t-field="company.report_footer"/>
