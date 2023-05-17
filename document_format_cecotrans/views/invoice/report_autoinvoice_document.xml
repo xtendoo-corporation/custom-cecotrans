@@ -55,7 +55,7 @@
                                 <p class="m-0" t-field="o.invoice_date"/>
                             </div>
                             <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
-                                <p>Facturada creada por
+                                <p>Factura creada por
                                     <t t-esc="company.name"/>
                                     en nombre de
                                 </p>
