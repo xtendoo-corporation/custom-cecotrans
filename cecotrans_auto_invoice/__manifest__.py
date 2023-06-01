@@ -1,9 +1,9 @@
 # Copyright 2022 Xtendoo
 
 {
-    "name": "Cecotrans Auto invoice",
+    "name": "Cecotrans Auto Invoice",
     "summary": """
-        Cecotrans Auto invoice""",
+        Cecotrans Auto Invoice""",
     "version": "15.0.1.0.0",
     "depends": [
         "base",
