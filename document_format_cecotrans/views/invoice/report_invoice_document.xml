@@ -52,10 +52,15 @@
                         <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type" name="account_invoice_line_accountable">
                                 <td style="height: 5px;padding:0px;" name="account_invoice_line_name">
-                                    <t t-set="productName" t-value="line.name"/>
-                                    <t t-set="name_num" t-value="productName.find(']') + 1 "/>
-                                    <t t-set="name" t-value="productName[name_num:]"/>
-                                    <span t-esc="name" t-options="{'widget': 'text'}"/>
+                                    <t t-if="line.name">
+                                        <t t-set="productName" t-value="line.name"/>
+                                        <t t-set="name_num" t-value="productName.find(']') + 1 "/>
+                                        <t t-set="name" t-value="productName[name_num:]"/>
+                                        <span t-esc="name" t-options="{'widget': 'text'}"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-field="line.product_id.name"></span>
+                                    </t>
                                 </td>
                                 <td class="text-right" style="height: 5px;padding:0px;">
                                     <span t-field="line.quantity"/>
