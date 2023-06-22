@@ -139,9 +139,12 @@ class CecotransInvoiceImport(models.TransientModel):
         lines = []
         sheet = book.sheet_by_index(index_sheet)
         for row in range(3, sheet.nrows):
+            route = sheet.cell_value(row, 1)
+            if isinstance(sheet.cell_value(row, 1), float):
+                route = "{:.0f}".format(sheet.cell_value(row, 1))
             lines.append(
                 {
-                    "route": "{:.0f}".format(sheet.cell_value(row, 1)),
+                    "route": route,
                     "price": sheet.cell_value(row, 3),
                 }
             )
