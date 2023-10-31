@@ -28,8 +28,6 @@ class CecotransVendorBillImport(models.TransientModel):
 
     import_file = fields.Binary(string="Import File (*.xlsx)")
 
-    webservice_backend_id = fields.Many2one("webservice.backend")
-
     def action_import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         self.ensure_one()

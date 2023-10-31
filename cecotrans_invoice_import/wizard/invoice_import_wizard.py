@@ -1,17 +1,10 @@
 import logging
 import base64
-import uuid
-from ast import literal_eval
-from datetime import date, datetime as dt
-from io import BytesIO
 
 import xlrd
-import xlwt
 
 from odoo import _, fields, api, models
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -26,8 +19,6 @@ class CecotransInvoiceImport(models.TransientModel):
     _description = "Cecotrans Invoice Import"
 
     import_file = fields.Binary(string="Import File (*.xlsx)")
-
-    webservice_backend_id = fields.Many2one("webservice.backend")
 
     def action_import_file(self):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
@@ -48,12 +39,12 @@ class CecotransInvoiceImport(models.TransientModel):
         try:
             decoded_data = base64.decodebytes(import_file)
             book = xlrd.open_workbook(file_contents=decoded_data)
-            self.create_invoice(partner_id, book, 1, 'Sevilla')  # Sevilla resumen
-            self.create_invoice(partner_id, book, 4, 'Huelva')  # Huelva resumen
-            self.create_invoice(partner_id, book, 7, 'Puerto Real')  # Pto. Real resumen
-            self.create_invoice(partner_id, book, 10, 'Jerez')  # Jerez resumen
-            self.create_invoice(partner_id, book, 13, 'Madrid')  # Madrid resumen
-            self.create_invoice(partner_id, book, 16, 'Burgos')  # Burgos resumen
+
+            for sheet_name in book.sheet_names():
+                if "(resumen)" in sheet_name:
+                    index_sheet = book.sheet_names().index(sheet_name)
+                    self.create_invoice(partner_id, book, index_sheet, sheet_name.replace("(resumen)", ""))
+
         except xlrd.XLRDError:
             raise ValidationError(
                 _("Invalid file style, only .xls or .xlsx file allowed")
