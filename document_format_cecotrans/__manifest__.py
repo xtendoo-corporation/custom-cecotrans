@@ -15,6 +15,8 @@
         "purchase",
         "sale",
         "stock",
+        "l10n_es_aeat",
+        "contacts",
     ],
     "data": [
         "views/layout/external_layout_clean.xml",

@@ -80,10 +80,7 @@
                         </div>
                     </div>
                 </div>
-                <div
-                    style="height:2px;width:100%;background-color:black;margin-top:2px;"
-                >
-                </div>
+                <div style="height:2px;width:100%;background-color:black;margin-top:2px;"/>
             </xpath>
             <xpath expr="//div[3]" position="replace">
                 <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -91,7 +88,19 @@
                         <ul class="list-inline mb4">
                             <div t-field="company.report_footer"/>
                         </ul>
-                        <div t-if="report_type == 'pdf'" class="text-muted">
+                        <div class="col-3">
+                            <img
+                                t-if="company.logo"
+                                t-att-src="image_data_uri(company.logo)"
+                                alt="Logo"
+                                style="max-height:150px"
+                            />
+
+                <img src="/board/static/src/legacy/img/layout_1-1-1.png" width="16" height="16" alt=""/>
+
+
+                        </div>
+                        <div class="col-8 text-muted" t-if="report_type == 'pdf'">
                             Page:
                             <span class="page"/>
                             /
