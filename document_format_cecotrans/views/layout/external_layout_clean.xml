@@ -88,23 +88,19 @@
                         <ul class="list-inline mb4">
                             <div t-field="company.report_footer"/>
                         </ul>
-                        <div class="col-3">
-                            <img
-                                t-if="company.logo"
-                                t-att-src="image_data_uri(company.logo)"
-                                alt="Logo"
-                                style="max-height:150px"
-                            />
-
-                <img src="/board/static/src/legacy/img/layout_1-1-1.png" width="16" height="16" alt=""/>
-
-
-                        </div>
-                        <div class="col-8 text-muted" t-if="report_type == 'pdf'">
-                            Page:
-                            <span class="page"/>
-                            /
-                            <span class="topage"/>
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/document_format_cecotrans/static/img/asnef.png"
+                                    alt="Asnef Logo"
+                                    style="max-height:100px"
+                                />
+                            </div>
+                            <div class="col-8 text-muted" t-if="report_type == 'pdf'">
+                                Page:
+                                <span class="page"/>
+                                /
+                                <span class="topage"/>
+                            </div>
                         </div>
                     </div>
                 </div>
