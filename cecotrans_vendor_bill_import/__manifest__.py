@@ -4,7 +4,7 @@
     "name": "Cecotrans Vendor Bill Import",
     "summary": """
         Cecotrans Vendor Bill Import""",
-    "version": "15.0.1.0.0",
+    "version": "17.0.1.0.0",
     "depends": [
         "account",
         "mass_mailing",
