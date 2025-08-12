@@ -5,8 +5,8 @@
             id="document_format_cecotrans.external_layout_clean_cecotrans"
             inherit_id="web.external_layout_bold"
         >
-            <xpath expr="//div[hasclass('o_clean_header')]" position="replace">
-                <div class="o_clean_header">
+            <xpath expr="//div[@t-att-style='report_header_style']" position="replace">
+                 <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
                     <div class="row">
                         <div class="col-3">
                             <img
@@ -82,7 +82,7 @@
                 </div>
                 <div style="height:2px;width:100%;background-color:black;margin-top:2px;"/>
             </xpath>
-            <xpath expr="//div[3]" position="replace">
+            <xpath expr="//div[4]" position="replace">
                 <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
                     <div class="text-center" style="border-top: 1px solid black;">
                         <ul class="list-inline mb4">

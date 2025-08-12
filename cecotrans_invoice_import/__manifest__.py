@@ -10,7 +10,7 @@
         "mass_mailing",
     ],
     "maintainers": [
-        "manuelcalerosolis",
+        "manuelcalerosolis, Dani Dominguez",
     ],
     "author": "Xtendoo",
     "license": "AGPL-3",
