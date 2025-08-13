@@ -94,13 +94,14 @@ class CecotransVendorBillImport(models.TransientModel):
         vendor_bill_lines = []
         for line in lines:
             product_name = sh.cell_value(rowx=line, colx=4)
-            if "Importe transporte" in product_name:
-                product = self.env["product.template"].search([("name", "=", "Importe transporte")], limit=1)
+            if "transporte" in product_name:
+                product = self.env["product.template"].search([("default_code", "=", "TRN")], limit=1)
             else:
-                product = self.env["product.template"].search([("name", "=", "Clausula gasoil")], limit=1)
+                product = self.env["product.template"].search([("default_code", "=", "GAS")], limit=1)
             if not product:
                 raise ValidationError(
-                    _('Product not found, %s please correct this.' % line["route"])
+                    _('Product not found for line %s with product name: %s. Please correct this.' % (line,
+                                                                                                     product_name))
                 )
             taxes = self.env["account.fiscal.position"].search([("name", "=", partner_id.property_account_position_id.name)], limit=1)
             if taxes:
@@ -110,24 +111,24 @@ class CecotransVendorBillImport(models.TransientModel):
             price_unit = sh.cell_value(rowx=line, colx=6)
             quantity = sh.cell_value(rowx=line, colx=5)
             vendor_bill_lines.append(
-                    {
-                        "product_id": product.id,
-                        "name": product_name,
-                        "account_id": product.property_account_income_id.id,
-                        "price_unit": price_unit,
-                        "tax_ids": [(6, 0, taxes_ids.ids)],
-                        "quantity": quantity,
-                    }
-                )
-            if not vendor_bill_lines:
-                raise ValidationError(
-                    _('No lines get from Excel file to import in this invoice.')
-                )
+                (0, 0, {
+                    "product_id": product.id,
+                    "name": product_name,
+                    "account_id": product.property_account_income_id.id,
+                    "price_unit": price_unit,
+                    "tax_ids": [(6, 0, taxes_ids.ids)],
+                    "quantity": quantity,
+                })
+            )
+        if not vendor_bill_lines:
+            raise ValidationError(
+                _('No lines get from Excel file to import in this invoice.')
+            )
         return vendor_bill_lines
 
     def _prepare_vendor_bill(self, partner_id, vendor_bill_lines, ref, vendor_bill_date):
         self.ensure_one()
-        journal = self.env['account.move'].with_context(default_move_type='in_invoice')._get_default_journal()
+        journal = self.env['account.move'].with_context(default_move_type='in_invoice')._get_default_journal_id()
         if not journal:
             raise ValidationError(
                 _('Please define an accounting sales journal for the company %s (%s).', self.company_id.name,
@@ -162,8 +163,3 @@ class CecotransVendorBillImport(models.TransientModel):
                 self.env["ir.sequence"].next_by_code(partner_id.name) or "/"
             )
         return ref
-
-
-
-
-

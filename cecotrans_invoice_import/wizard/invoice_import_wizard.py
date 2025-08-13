@@ -53,9 +53,10 @@ class CecotransInvoiceImport(models.TransientModel):
             raise e
 
     def _prepare_invoice_lines(self, invoice_data):
+        """Prepare invoice lines from the imported data"""
         lines = []
-        for line in invoice_data['lines']:
-            product = self.env["product.template"].search([("name", "=", line["route"])], limit=1)
+        for line in invoice_data.get('lines', []):
+            product = self.env["product.template"].search([("default_code", "=", line["route"])], limit=1)
             if not product:
                 raise ValidationError(
                     _('Product not found, %s please correct this.' % line["route"])
@@ -85,14 +86,14 @@ class CecotransInvoiceImport(models.TransientModel):
                 "name": gas_product.description_sale,
                 "account_id": gas_product.property_account_income_id.id,
                 "price_unit": invoice_data['gas'],
-                "tax_ids": [(6, 0, taxes.ids)],
+                "tax_ids": [(6, 0, gas_product.taxes_id.filtered(lambda tax: tax.company_id == self.env.user.company_id).ids)],
             }
         )
         return lines
 
     def _prepare_invoice(self, partner_id, invoice_data, ref):
         self.ensure_one()
-        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
+        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal_id()
         if not journal:
             raise ValidationError(
                 _('Please define an accounting sales journal for the company %s (%s).', self.company_id.name,
@@ -103,14 +104,17 @@ class CecotransInvoiceImport(models.TransientModel):
             raise ValidationError(
                 _('No lines to import in this invoice.')
             )
+        # Convert lines to proper Odoo commands format
+        line_commands = [(0, 0, line) for line in invoice_lines]
+
         invoice_vals = {
             'move_type': 'out_invoice',
             'ref': ref,
             'partner_id': partner_id.id,
-            'journal_id': journal.id,  # company comes from the journal
+            'journal_id': journal.id,
             "date": fields.Date.today(),
             "invoice_date": fields.Date.today(),
-            'invoice_line_ids': invoice_lines,
+            'invoice_line_ids': line_commands,
         }
         return invoice_vals
 
