@@ -1,18 +1,9 @@
 import logging
 import base64
-import uuid
-from ast import literal_eval
-from datetime import date, datetime as dt
-from io import BytesIO
-
+from datetime import datetime
 import xlrd
-import xlwt
-
 from odoo import _, fields, api, models
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
-from odoo.tools.safe_eval import safe_eval
-from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -84,10 +75,10 @@ class CecotransVendorBillImport(models.TransientModel):
         if invoice_hash:
             invoice_create = self.env["account.move"].create(invoice_hash)
             invoice_create._onchange_partner_id()
-            invoice_create.action_post()
+            # No publicar automáticamente: dejar la factura en borrador para revisión/manual posting
+            # invoice_create.action_post()  # removido intencionalmente
             return invoice_create
         return
-
 
 
     def _prepare_vendor_bill_lines(self, sh, lines, partner_id):
@@ -142,6 +133,7 @@ class CecotransVendorBillImport(models.TransientModel):
             "date": vendor_bill_date,
             "invoice_date": vendor_bill_date,
             'invoice_line_ids': vendor_bill_lines,
+            'state': 'draft',
         }
         return invoice_vals
 
