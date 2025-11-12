@@ -6,14 +6,21 @@
             inherit_id="account.report_invoice_document"
         >
             <xpath expr="//div[hasclass('page')]" position="inside">
-                <t t-set="partner_id" t-value="o.partner_id"></t>
+                <t t-set="partner_id" t-value="o.partner_id"/>
             </xpath>
-            <xpath expr="//t[@t-set='address']" position="replace">
 
+            <!-- Ocultar todo el bloque de direcciones del cliente que aparece duplicado -->
+            <xpath expr="//t[@t-call='web.external_layout']/div[@class='row'][1]" position="replace">
             </xpath>
+
             <xpath expr="//div[@name='customer_code']" position="replace">
 
             </xpath>
+
+            <!-- Ocultar también el div con name='reference' si existe -->
+            <xpath expr="//div[@name='reference']" position="replace">
+            </xpath>
+
             <xpath expr="//p[@name='payment_communication']" position="replace">
                 <p style="margin-top:40px;" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference"
                    name="payment_communication">

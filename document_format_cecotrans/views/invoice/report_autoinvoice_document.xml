@@ -54,13 +54,7 @@
                                 </t>
                                 <p class="m-0" t-field="o.invoice_date"/>
                             </div>
-                            <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
-                                <p>Factura creada por
-                                    <t t-esc="company.name"/>
-                                    en nombre de
-                                </p>
-                                <t t-esc="partner_id.name"/>
-                            </div>
+
                         </div>
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
