@@ -41,7 +41,7 @@
                         <div id="informations" class="row mt-4 mb-4">
                             <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
                                 <t t-if="o.move_type == 'out_invoice'">
-                                    <strong>Invoice Date:</strong>
+                                    <strong>Invoice Date: </strong>
                                 </t>
                                 <t t-elif="o.move_type == 'out_refund'">
                                     <strong>Credit Note Date:</strong>
