@@ -142,17 +142,13 @@ class CecotransVendorBillImport(models.TransientModel):
         self, partner_id, vendor_bill_lines, ref, vendor_bill_date
     ):
         self.ensure_one()
-        journal = (
-            self.env["account.move"]
-            .with_context(default_move_type="in_invoice")
-            ._get_default_journal_id()
-        )
+        journal = self.env.company.vendor_bill_import_journal_id
         if not journal:
             raise ValidationError(
                 _(
-                    "Please define an accounting sales journal for the company %s (%s).",
-                    self.company_id.name,
-                    self.company_id.id,
+                    "Por favor, defina un diario de compras para la compañía %s (%s) en la configuración.",
+                    self.env.company.name,
+                    self.env.company.id,
                 )
             )
         invoice_vals = {
