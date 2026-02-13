@@ -1,0 +1,299 @@
+[33mcommit 5a855f38c89556b6c5d4d69a15e593f566608518[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32m18.0[m[33m, [m[1;31morigin/18.0[m[33m)[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Feb 13 13:34:20 2026 +0100
+
+    send email after import deleted
+
+[33mcommit 9ec35314015d4547969d0bf8219d8463729a14ec[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Feb 13 10:56:38 2026 +0100
+
+    individual autofactura
+
+[33mcommit 2807b8af3d21ec6376c1b37b092fcb1cbaa0420b[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Feb 13 10:51:12 2026 +0100
+
+    autofacturas by default
+
+[33mcommit 8df5cb2c6b79ae1d6374e5f24b6ad1485a277c0a[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Feb 13 10:09:51 2026 +0100
+
+    autoinvoice format improved
+
+[33mcommit f0e5e7a26b5d7e00ef7be3e49806421f17ef5fe2[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Feb 13 09:29:43 2026 +0100
+
+    fixed reference
+
+[33mcommit 47952d73994eb4581afa98969c6a42da57d4ce27[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Nov 21 11:42:42 2025 +0100
+
+    fixed format
+
+[33mcommit 3dfce7d68315de5d11ce04d5f0c19a4ef2db2b30[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Nov 21 11:18:42 2025 +0100
+
+    fixed format
+
+[33mcommit 28a307a7b9cc35b0e85158a3b8f8e46f0f9830cb[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Nov 21 10:35:52 2025 +0100
+
+    bad format but works
+
+[33mcommit 74322beb6940cb8bf615b88a497f848458341f8a[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Fri Nov 21 09:07:49 2025 +0100
+
+    aparece autofactura
+
+[33mcommit 5597e525aed31b68a2f9e2df821d9f8455f1495b[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Wed Nov 12 13:46:35 2025 +0100
+
+    address fixed
+
+[33mcommit 0a2cac34cca0a8bb23e52d36f5e8835a08723f71[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Wed Nov 12 13:46:18 2025 +0100
+
+    addres fixed
+
+[33mcommit 5ef70321b9d77981c23f340ceb47e9242f19bcf0[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Mon Oct 27 09:27:28 2025 +0100
+
+    modo borrador al importar
+
+[33mcommit 75297b749da8b79c15744e19ebe274dd0eb475ca[m
+Author: Guillermo Bárcena López <barcenalopezguillermo@gmail.com>
+Date:   Wed Oct 22 08:41:39 2025 +0200
+
+    lineas de factura arreglada
+
+[33mcommit 434760300f466ba3612477dbb09bb5bee42d74c1[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Wed Aug 13 13:34:45 2025 +0200
+
+    sync
+
+[33mcommit 33284baea74dfa9ac6fd8c56baaa4cfda336697f[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Tue Aug 12 14:44:16 2025 +0200
+
+    sync
+
+[33mcommit 84da9ae61dacf6d64313e2d8017953763f569d87[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Mon Aug 11 12:09:56 2025 +0200
+
+    sync
+
+[33mcommit 1b69442f5fb0c710800462a2a773bd36124e01e6[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Mon Aug 11 11:17:03 2025 +0200
+
+    sync
+
+[33mcommit 0787ae67b300b2fbf42c55c79e3ebd769e7f7698[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Mon Aug 11 11:11:23 2025 +0200
+
+    sync
+
+[33mcommit a5271cdda007fe667246c3558e0350730e14adba[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Mon Aug 11 10:14:14 2025 +0200
+
+    sync
+
+[33mcommit e71576e971988ca9bb9ee28cb601e8741d53412a[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Wed Feb 21 12:40:37 2024 +0100
+
+    Arreglado logo, en pie de factura
+
+[33mcommit 4ff40531b9a650f5670e3777d01cc9830a8ef389[m
+Author: manuelcalerosolis <manuelcalerosolis@gmail.com>
+Date:   Sat Dec 2 20:01:45 2023 +0100
+
+    logo asnef
+
+[33mcommit 940e2db78c7f186376cb1068b4746ed4a4116e3f[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Tue Oct 31 11:18:42 2023 +0100
+
+    update module invoice import
+
+[33mcommit 5da93d095897ab0935465452e1c9292ef351f02b[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Thu Jun 22 10:08:24 2023 +0200
+
+    [MOD] cecotrans_invoice_import, arreglado el error que daba al importar ruta con string
+
+[33mcommit 01ae8044b525d3df92f9402617b085490855525c[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Wed Jun 21 08:14:04 2023 +0200
+
+    [MOD] stnc
+
+[33mcommit 974fb68b1fae729c027e794c2a7cd3d6c51ab7e3[m
+Author: Camilx03 <camilojrjbeas@gmail.com>
+Date:   Thu Jun 1 13:05:50 2023 +0200
+
+    cecotrans auto invoice translations
+
+[33mcommit 57b5a2c1ba390031b3e4633ce1af41f6a896ad50[m
+Author: Camilx03 <camilojrjbeas@gmail.com>
+Date:   Thu Jun 1 12:57:17 2023 +0200
+
+    cecotrans auto invoice translations
+
+[33mcommit 4cfa959ec63b38ddbe18be511c5e585566d87497[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Thu Jun 1 12:42:30 2023 +0200
+
+    [MOD] cecotrans_autoinvoice_respartner, al validar, envia la factura directamente por correo y lo notifica en el chatter de la propia factura
+
+[33mcommit 72e8b23f2b7715681dc88944453c5507cea76bc4[m
+Author: Camilx03 <camilojrjbeas@gmail.com>
+Date:   Thu Jun 1 08:44:00 2023 +0200
+
+    cecontrans_auto_invoice
+
+[33mcommit fa598da17c13245ffef22d756cd27fb854a81003[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Thu May 25 11:16:25 2023 +0200
+
+    [MOD] document_format_cecotrans, corrección del formato de autofactura
+
+[33mcommit e1de11fecbd360d381900abaa55fc9444ba989fa[m
+Author: Camilx03 <camilojrjbeas@gmail.com>
+Date:   Wed May 17 14:58:41 2023 +0200
+
+    document_format_cecotrans_report_autoinvoice_document
+
+[33mcommit f8f44549d7bd18164fffaa9a20aa290362f605c0[m
+Author: Camilx03 <camilojrjbeas@gmail.com>
+Date:   Wed May 17 14:12:43 2023 +0200
+
+    document_format_cecotrans_report_autoinvoice_document
+
+[33mcommit 2a16f38efd833b67375cb4df5e794ca73d910f66[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Tue May 16 09:25:17 2023 +0200
+
+    [MOD] document_format_cecotrans, añadido formato y cabecera para auto invoice
+
+[33mcommit aa3dcfb477da3195ea7b48de86bacd3757a87235[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Mon May 15 14:03:10 2023 +0200
+
+    new auto invoice  format
+
+[33mcommit 63672070cc4a5aa474396e86c1b27f0e1e146e2a[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Mon Mar 13 12:46:12 2023 +0100
+
+    [MOD] cecotrans_vendor_bill_import, autoconfirmar y enviar por correo
+
+[33mcommit 37ecf9180bb3b09d4bfbd81c3e72e221abe76067[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Thu Mar 9 11:32:57 2023 +0100
+
+    [ADD] cecotrans_vendor_bill_import
+
+[33mcommit 81be938bdf841a05f9659a158fa1be84fc08d34e[m
+Author: dani.xtendoo <dani.xtendoo@gmail.com>
+Date:   Fri Feb 10 09:59:26 2023 +0100
+
+    [MOD], document_format, añadida forma de pago y banco
+
+[33mcommit 5139bf036909dd9b68d813769937bed97f6efc9e[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Wed Nov 23 14:27:52 2022 +0100
+
+    sync
+
+[33mcommit 0d09a59e9fc4d29621a54dabe396c74a3ca5b8bd[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Wed Nov 23 12:11:44 2022 +0100
+
+    sync
+
+[33mcommit 4ef92449834ca0f237dc30838bdf88b59fae54f4[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Tue Nov 22 14:09:50 2022 +0100
+
+    [ADD] Document format cecotrans
+
+[33mcommit acfb7c4a0a6c36a8964ca31ce9628b02a331d93f[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Sat Nov 19 20:12:56 2022 +0100
+
+    invoice references
+
+[33mcommit d8d96e47c1e8bd6c933b610f61b8cb8c5368a784[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Sat Nov 19 19:47:52 2022 +0100
+
+    invoice references
+
+[33mcommit 440aa5ca03d879cfe321c3689c443f9c2ce2f956[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Sat Nov 19 19:16:35 2022 +0100
+
+    invoice references
+
+[33mcommit efa3fff499a6aa56411db29c70fe25f7ba84440d[m
+Author: dani <dani.xtendoo@gmail.com>
+Date:   Fri Nov 18 12:10:15 2022 +0100
+
+    sync
+
+[33mcommit 45f6c8b17cfc83e9cbbea8074eae6b03a217c235[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Thu Nov 17 01:25:15 2022 +0100
+
+    creating invoices
+
+[33mcommit 347ec641d769de0b9c0b4bffd4f601a84216fc00[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Wed Nov 16 02:36:26 2022 +0100
+
+    importing rows
+
+[33mcommit 727199e0ed33ce833df8ab60592c219dac5265d2[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Tue Nov 15 01:10:52 2022 +0100
+
+    wizard import file
+
+[33mcommit a10799a5a3bf3e778f96ab2453bf20f8235f4f8b[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Mon Nov 14 13:11:33 2022 +0100
+
+    initial commit
+
+[33mcommit 0bf11fc67695fdbf8cc51c186ff9395972f60a1b[m
+Author: Manuel Calero <manuelcalerosolis@gmail.com>
+Date:   Mon Nov 14 13:09:41 2022 +0100
+
+    initial commit
+
+[33mcommit d1c348e6f45edde915288196b8a6940d6a1c451c[m
+Author: Manuel Calero Solís <manuelcalerosolis@gmail.com>
+Date:   Mon Nov 14 11:22:50 2022 +0100
+
+    Update README.md
+
+[33mcommit 56381aa073b81cd0bb9a17c3aea3992e03c5d801[m
+Author: Manuel Calero Solís <manuelcalerosolis@gmail.com>
+Date:   Mon Nov 14 11:18:24 2022 +0100
+
+    Initial commit
