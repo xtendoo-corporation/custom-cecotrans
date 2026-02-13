@@ -9,7 +9,7 @@
             <field name="report_name">document_format_cecotrans.invoice_cecotrans_report</field>
             <field name="print_report_name">'Invoice - %s' % (object.name)</field>
 
-            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
             <field name="binding_type">report</field>
         </record>
 
@@ -17,9 +17,9 @@
             <t t-name="document_format_cecotrans.invoice_cecotrans_report">
                 <t t-call="web.html_container">
                     <t t-foreach="docs" t-as="o">
-                        <t t-set="lang" t-value="o.partner_id.lang"/>
+                        <t t-set="lang" t-value="o.partner_id.lang" />
                         <t t-call="document_format_cecotrans.cecotrans_report_invoice_document"
-                           t-lang="lang"/>
+                            t-lang="lang" />
                     </t>
                 </t>
             </t>
@@ -28,60 +28,67 @@
         <template id="document_format_cecotrans.cecotrans_report_invoice_document">
             <t t-name="document_format_cecotrans.cecotrans_report_invoice_document">
 
-                <t t-set="company" t-value="o.company_id"/>
-                <t t-set="partner_id" t-value="o.partner_id"/>
+                <t t-set="company" t-value="o.company_id" />
+                <t t-set="partner_id" t-value="o.partner_id" />
 
                 <t t-call="document_format_cecotrans.layout_auto_invoice_cecotrans">
-                    <t t-set="o" t-value="o.with_context(lang=lang)"/>
-                    <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/>
+                    <t t-set="o" t-value="o.with_context(lang=lang)" />
+                    <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat" />
 
                     <div class="page">
 
-                        <h2 style="color:#A20424; font-size:28px; font-weight:600; margin:0 0 10px 0;">
-                            <span t-if="o.ref and o.ref != '/'">
-                                <t t-esc="o.ref"/>
+                        <h2
+                            style="color:#A20424; font-size:28px; font-weight:600; margin:0 0 10px 0;">
+                            <span t-if="o.ref and o.ref != '/'"> Factura de proveedor <t
+                                    t-esc="o.ref" />
                             </span>
                         </h2>
 
 
-                        <div id="informations" class="row" style="margin-top:10px; margin-bottom:25px;">
+                        <div id="informations" class="row"
+                            style="margin-top:10px; margin-bottom:25px;">
 
                             <!-- FECHA A LA IZQUIERDA -->
                             <div class="col-6" name="invoice_date" style="font-size:13px;">
                                 <strong>Fecha:</strong>
-                                <br/>
-                                <span t-field="o.invoice_date"/>
+                                <br />
+                                <span t-field="o.invoice_date" />
                             </div>
 
                             <!-- TEXTO A LA DERECHA -->
                             <div class="col-6 text-right" style="text-align:right; font-size:13px;">
-                                Factura creada por
-                                <strong>
-                                    <t t-esc="o.company_id.name"/>
-                                </strong>
-                                <br/>
-                                en nombre de
-                                <br/>
-                                <strong>
-                                    <t t-esc="o.partner_id.name"/>
-                                </strong>
+                                <div style="display:inline-block; text-align:left;"> Factura creada
+                                    por <strong>
+                                        <t t-esc="o.company_id.name" />
+                                    </strong>
+                                    en nombre de <br /> <br />
+                                    <strong>
+                                        <t t-esc="o.partner_id.name" />
+                                    </strong>
+                                </div>
                             </div>
 
                         </div>
 
                         <t t-set="display_discount"
-                           t-value="any(l.discount for l in o.invoice_line_ids)"/>
-                         <div style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
+                            t-value="any(l.discount for l in o.invoice_line_ids)" />
+                        <div style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
                         <table name="invoice_line_table"
-                               class="o_has_total_table table o_main_table table-borderless mb-0">
+                            class="o_has_total_table table o_main_table table-borderless mb-0">
 
                             <thead>
                                 <tr>
-                                    <th style="padding:6px 4px; text-align:left; font-weight:bold;">DESCRIPCIÓN</th>
-                                    <th style="padding:6px 4px; text-align:center; font-weight:bold;">CANTIDAD</th>
-                                    <th style="padding:6px 4px; text-align:right; font-weight:bold;">PRECIO</th>
-                                    <th style="padding:6px 4px; text-align:right; font-weight:bold;">IMPUESTOS</th>
-                                    <th style="padding:6px 4px; text-align:right; font-weight:bold;">IMPORTE</th>
+                                    <th style="padding:6px 4px; text-align:left; font-weight:bold;">
+                                        DESCRIPCIÓN</th>
+                                    <th
+                                        style="padding:6px 4px; text-align:center; font-weight:bold;">
+                                        CANTIDAD</th>
+                                    <th style="padding:6px 4px; text-align:right; font-weight:bold;">
+                                        PRECIO</th>
+                                    <th style="padding:6px 4px; text-align:right; font-weight:bold;">
+                                        IMPUESTOS</th>
+                                    <th style="padding:6px 4px; text-align:right; font-weight:bold;">
+                                        IMPORTE</th>
                                 </tr>
                             </thead>
 
@@ -92,25 +99,26 @@
                                     <tr>
 
                                         <td style="padding:6px 4px;">
-                                            <span t-field="line.name"/>
+                                            <span t-field="line.name" />
                                         </td>
 
                                         <td style="padding:6px 4px; text-align:center;">
-                                            <span t-field="line.quantity"/>
+                                            <span t-field="line.quantity" />
                                         </td>
 
                                         <td style="padding:6px 4px; text-align:right;">
-                                            <span t-field="line.price_unit"/>
+                                            <span t-field="line.price_unit" />
                                         </td>
 
                                         <td style="padding:6px 4px; text-align:right;">
-                                            <t t-set="tax_amount" t-value="line.price_total - line.price_subtotal"/>
+                                            <t t-set="tax_amount"
+                                                t-value="line.price_total - line.price_subtotal" />
                                             <span t-esc="tax_amount"
-                                                  t-options="{'widget':'monetary','display_currency': o.currency_id}"/>
+                                                t-options="{'widget':'monetary','display_currency': o.currency_id}" />
                                         </td>
 
                                         <td style="padding:6px 4px; text-align:right;">
-                                            <span t-field="line.price_subtotal"/>
+                                            <span t-field="line.price_subtotal" />
                                         </td>
 
                                     </tr>
@@ -118,36 +126,38 @@
 
                             </tbody>
                         </table>
-                         <div style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
+                        <div style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
 
 
                         <div class="clearfix">
                             <div id="total" class="row">
                                 <div
                                     t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
-                                    <table class="o_has_total_table table o_main_table table-borderless mb-0" >
-                                        <t t-set="currency" t-value="o.currency_id"/>
-                                        <t t-set="tax_totals" t-value="o.tax_totals"/>
-                                        <t t-call="account.document_tax_totals"/>
+                                    <table
+                                        class="o_has_total_table table o_main_table table-borderless mb-0">
+                                        <t t-set="currency" t-value="o.currency_id" />
+                                        <t t-set="tax_totals" t-value="o.tax_totals" />
+                                        <t t-call="account.document_tax_totals" />
 
                                         <t t-if="print_with_payments">
                                             <t t-if="o.payment_state != 'invoicing_legacy'">
                                                 <t t-set="payments_vals"
-                                                   t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                                    t-value="o.sudo()._get_reconciled_info_JSON_values()" />
 
                                                 <t t-foreach="payments_vals" t-as="payment_vals">
                                                     <tr>
                                                         <td>
-                                                            <i class="oe_form_field text-right oe_payment_label">
-                                                                Paid on
-                                                                <t t-esc="payment_vals['date']"
-                                                                   t-options='{"widget":"date"}'/>
+                                                            <i
+                                                                class="oe_form_field text-right oe_payment_label">
+                                                                Paid on <t
+                                                                    t-esc="payment_vals['date']"
+                                                                    t-options='{"widget":"date"}' />
                                                             </i>
                                                         </td>
                                                         <td class="text-right">
                                                             <span t-esc="payment_vals['amount']"
-                                                                  t-options='{"widget":"monetary",
-                                                                               "display_currency": o.currency_id}'/>
+                                                                t-options='{"widget":"monetary",
+                                                                               "display_currency": o.currency_id}' />
                                                         </td>
                                                     </tr>
                                                 </t>
@@ -158,7 +168,7 @@
                                                             <strong>Amount Due</strong>
                                                         </td>
                                                         <td class="text-right">
-                                                            <span t-field="o.amount_residual"/>
+                                                            <span t-field="o.amount_residual" />
                                                         </td>
                                                     </tr>
                                                 </t>
@@ -167,38 +177,37 @@
                                         </t>
 
                                     </table>
-                                     <div style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
+                                    <div
+                                        style="height:2px;width:100%;background-color:black;margin-top:2px;"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <p t-if="o.move_type in ('out_invoice','in_refund')
+                        <p
+                            t-if="o.move_type in ('out_invoice','in_refund')
                                  and o.payment_reference"
-                           name="payment_communication">
-                            Forma de pago :
-                            <b>
-                                <span t-field="o.payment_reference"/>
+                            name="payment_communication"> Forma de pago : <b>
+                                <span t-field="o.payment_reference" />
                             </b>
                         </p>
 
                         <p t-if="o.invoice_payment_term_id" name="payment_term">
-                            <span t-field="o.invoice_payment_term_id.note"/>
+                            <span t-field="o.invoice_payment_term_id.note" />
                         </p>
 
                         <div t-if="not is_html_empty(o.narration)" name="comment">
-                            <span t-field="o.narration"/>
+                            <span t-field="o.narration" />
                         </div>
 
                         <p t-if="not is_html_empty(o.fiscal_position_id.note)"
-                           name="note">
-                            <span t-field="o.fiscal_position_id.note"/>
+                            name="note">
+                            <span t-field="o.fiscal_position_id.note" />
                         </p>
 
                         <p t-if="o.invoice_incoterm_id" name="incoterm">
                             <strong>Incoterm:</strong>
-                            <span t-field="o.invoice_incoterm_id.code"/>
-                            -
-                            <span t-field="o.invoice_incoterm_id.name"/>
+                            <span t-field="o.invoice_incoterm_id.code" />
+                            - <span t-field="o.invoice_incoterm_id.name" />
                         </p>
 
                     </div>
