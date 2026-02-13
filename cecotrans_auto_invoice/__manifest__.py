@@ -7,7 +7,8 @@
     "version": "18.0.1.0.0",
     "depends": [
         "base",
-        "account"
+        "account",
+        "cecotrans_vendor_bill_import",
     ],
     "maintainers": [
         "Daniel Domínguez",
