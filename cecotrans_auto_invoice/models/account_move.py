@@ -4,10 +4,10 @@ from odoo import models, fields, api
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    def action_post(self):
-        print("AutoInvoice: executing action_post")
-        res = super().action_post()
+    def _post(self, soft=True):
+        res = super()._post(soft=soft)
         for invoice in self:
+            print(f"AutoInvoice: Inside _post loop for invoice: {invoice.id}")
             print(
                 f"AutoInvoice: Checking invoice {invoice.id} - Type: {invoice.move_type}, Auto: {invoice.partner_id.auto_invoice}, Email: {invoice.partner_id.email}"
             )
