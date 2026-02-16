@@ -24,8 +24,8 @@ class CecotransVendorBillImport(models.TransientModel):
         self.ensure_one()
         if self.import_file:
             invoice_create_ids = self._import_record_data(self.import_file)
-            for invoice in invoice_create_ids:
-                invoice.send_vendor_bill_mail_template()
+            # for invoice in invoice_create_ids:
+            #     invoice.send_vendor_bill_mail_template()
         else:
             raise ValidationError(_("Please select Excel file to import"))
 
