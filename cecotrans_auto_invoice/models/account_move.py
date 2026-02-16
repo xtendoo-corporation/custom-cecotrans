@@ -5,22 +5,29 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     def action_post(self):
+        print("AutoInvoice: executing action_post")
         res = super().action_post()
         for invoice in self:
+            print(
+                f"AutoInvoice: Checking invoice {invoice.id} - Type: {invoice.move_type}, Auto: {invoice.partner_id.auto_invoice}, Email: {invoice.partner_id.email}"
+            )
             if (
                 invoice.partner_id.email
                 and invoice.move_type == "in_invoice"
                 and invoice.partner_id.auto_invoice
             ):
+                print(f"AutoInvoice: Calling send_email for invoice {invoice.id}")
                 invoice.send_email()
         return res
 
     def send_email(self):
         # Use standard Odoo logic to generate PDF and send email
         # This will also log the email in the chatter
+        print(f"AutoInvoice: Converting to account.move.send for invoice {self.id}")
         self.env["account.move.send"]._generate_and_send_invoices(
             self, sending_methods={"email"}
         )
+        print(f"AutoInvoice: _generate_and_send_invoices called for invoice {self.id}")
 
     @api.onchange("partner_id")
     def _onchange_partner_id_auto_invoice(self):
