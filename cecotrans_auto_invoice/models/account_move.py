@@ -71,6 +71,11 @@ class AccountMove(models.Model):
             if journal:
                 self.journal_id = journal
 
+            # Determine prefix from journal code or fallback to CE
+            prefix = "CE"
+            if self.journal_id and self.journal_id.code:
+                prefix = self.journal_id.code
+
             # Calculate Reference
             current_year = fields.Date.context_today(self).year
             new_ref = False
@@ -81,7 +86,7 @@ class AccountMove(models.Model):
                     ("move_type", "=", "in_invoice"),
                     ("partner_id", "=", self.partner_id.id),
                     ("state", "!=", "cancel"),
-                    ("ref", "like", "CE/%"),
+                    ("ref", "like", f"{prefix}/%"),
                 ],
                 limit=1,
                 order="date desc, id desc",
@@ -90,18 +95,18 @@ class AccountMove(models.Model):
             if last_invoice and last_invoice.ref:
                 try:
                     parts = last_invoice.ref.split("/")
-                    # Expected format: CE/YYYY/XXXXX
-                    if len(parts) == 3 and parts[0] == "CE":
+                    # Expected format: PREFIX/YYYY/XXXXX
+                    if len(parts) == 3 and parts[0] == prefix:
                         year_str = parts[1]
                         seq_str = parts[2]
 
                         if year_str == str(current_year):
                             new_seq = int(seq_str) + 1
-                            new_ref = f"CE/{current_year}/{str(new_seq).zfill(5)}"
+                            new_ref = f"{prefix}/{current_year}/{str(new_seq).zfill(5)}"
                 except (ValueError, IndexError):
                     pass
 
             if not new_ref:
-                new_ref = f"CE/{current_year}/00001"
+                new_ref = f"{prefix}/{current_year}/00001"
 
             self.ref = new_ref
