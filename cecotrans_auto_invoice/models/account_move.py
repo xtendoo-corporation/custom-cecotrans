@@ -4,6 +4,38 @@ from odoo import models, fields, api
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Interceptar create para asignar name = ref en auto_invoice
+        ANTES de que Odoo lo compute con _compute_name."""
+        for vals in vals_list:
+            if vals.get("move_type") == "in_invoice" and vals.get("ref"):
+                partner = self.env["res.partner"].browse(vals.get("partner_id"))
+                if partner.auto_invoice:
+                    vals["name"] = vals["ref"]
+        return super().create(vals_list)
+
+    def write(self, vals):
+        """Interceptar write para forzar name = ref en auto_invoice
+        cuando cambia el state a posted (al confirmar la factura)."""
+        result = super().write(vals)
+        # Si se ha publicado, forzar name = ref para las auto_invoice
+        if vals.get("state") == "posted":
+            for move in self:
+                if (
+                    move.move_type == "in_invoice"
+                    and move.partner_id.auto_invoice
+                    and move.ref
+                    and move.name != move.ref
+                ):
+                    # Bypass del ORM para evitar recursión y recompute
+                    self.env.cr.execute(
+                        "UPDATE account_move SET name = %s WHERE id = %s",
+                        (move.ref, move.id),
+                    )
+                    move.invalidate_recordset(["name"])
+        return result
+
     def _post(self, soft=True):
         res = super()._post(soft=soft)
         for invoice in self:
@@ -66,3 +98,4 @@ class AccountMove(models.Model):
             new_ref = partner_sequence.next_by_id()
 
             self.ref = new_ref
+            self.name = new_ref
