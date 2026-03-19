@@ -10,15 +10,17 @@
             </xpath>
 
             <!-- Ocultar todo el bloque de direcciones del cliente que aparece duplicado -->
-            <xpath expr="//t[@t-call='web.external_layout']/div[@class='row'][1]" position="replace">
+            <xpath expr="//t[@t-call='web.external_layout']/div[@class='row'][1]" position="attributes">
+                <attribute name="style">display: none;</attribute>
             </xpath>
 
-            <xpath expr="//div[@name='customer_code']" position="replace">
-
+            <xpath expr="//div[@name='customer_code']" position="attributes">
+                <attribute name="style">display: none;</attribute>
             </xpath>
 
             <!-- Ocultar también el div con name='reference' si existe -->
-            <xpath expr="//div[@name='reference']" position="replace">
+            <xpath expr="//div[@name='reference']" position="attributes">
+                <attribute name="style">display: none;</attribute>
             </xpath>
 
             <xpath expr="//p[@name='payment_communication']" position="replace">
