@@ -5,27 +5,13 @@
             id="document_format_cecotrans.report_invoice_document_cecotrans"
             inherit_id="account.report_invoice_document"
         >
-            <!-- Agregar estilos para reducir espaciado entre líneas -->
-            <xpath expr="//t[@t-call='web.external_layout']" position="before">
-                <style>
-                    body { line-height: 1.3; }
-                    .page { line-height: 1.3; }
-                    p { margin-bottom: 0.3rem; }
-                    ul { margin-bottom: 0.3rem; }
-                    li { line-height: 1.3; }
-                    .row { margin-bottom: 0.5rem; }
-                    table { line-height: 1.2; }
-                    td, th { padding: 0.3rem 0.5rem !important; }
-                </style>
-            </xpath>
 
             <xpath expr="//div[hasclass('page')]" position="inside">
                 <t t-set="partner_id" t-value="o.partner_id"/>
             </xpath>
 
-            <!-- Ocultar todo el bloque de direcciones del cliente que aparece duplicado -->
-            <xpath expr="//t[@t-call='web.external_layout']/div[@class='row'][1]" position="attributes">
-                <attribute name="style">display: none;</attribute>
+            <!-- Reemplazar todo el bloque de direcciones del cliente que aparece duplicado -->
+            <xpath expr="//t[@t-call='web.external_layout']/div[@class='row'][1]" position="replace">
             </xpath>
 
             <xpath expr="//div[@name='customer_code']" position="attributes">
@@ -83,6 +69,13 @@
             </xpath>
 
             <xpath expr="//tbody[@class='invoice_tbody']" position="replace">
+                <style>
+                    .invoice_tbody td {
+                        padding-top: 1px !important;
+                        padding-bottom: 1px !important;
+                        vertical-align: middle !important;
+                    }
+                </style>
                 <tbody class="invoice_tbody">
                     <t t-set="current_subtotal" t-value="0"/>
                     <t t-set="lines"
