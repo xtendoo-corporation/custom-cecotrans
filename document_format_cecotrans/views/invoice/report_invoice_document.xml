@@ -93,13 +93,8 @@
                                 name="account_invoice_line_accountable">
                                 <td name="account_invoice_line_name">
                                     <t t-if="line.name">
-                                        <t t-set="productName" t-value="line.name" />
-                                        <t t-set="name_num" t-value="productName.find(']') + 1 " />
-                                        <t t-set="name" t-value="productName[name_num:]" />
-                                        <span t-esc="name" t-options="{'widget': 'text'}" />
-                                    </t>
-                                    <t t-else="">
-                                        <span t-field="line.product_id.name"></span>
+                                        <!-- Usamos el modelo seguro por salto de línea para evitar fallos cuando no hay producto -->
+                                        <span t-esc="line.name.split('\n', 1)[-1]" t-options="{'widget': 'text'}" />
                                     </t>
                                 </td>
                                 <td class="text-right">
