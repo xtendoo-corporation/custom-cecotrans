@@ -1,19 +1,70 @@
-from odoo import models, fields, api
+from odoo import models, api
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    @api.model
+    def _get_autofacturas_journal(self):
+        return self.env["account.journal"].search(
+            [
+                ("name", "=", "Autofacturas"),
+                ("type", "=", "purchase"),
+                ("company_id", "=", self.env.company.id),
+            ],
+            limit=1,
+        )
+
+    @api.model
+    def _is_autofacturas_journal(self, journal):
+        return bool(journal and journal.type == "purchase" and journal.name == "Autofacturas")
+
     @api.model_create_multi
     def create(self, vals_list):
         """Interceptar create para asignar name = ref en auto_invoice
         ANTES de que Odoo lo compute con _compute_name."""
+        pending_partner_sequences = {}
         for vals in vals_list:
-            if vals.get("move_type") == "in_invoice" and vals.get("ref"):
-                partner = self.env["res.partner"].browse(vals.get("partner_id"))
-                if partner.auto_invoice:
+            if vals.get("move_type") != "in_invoice":
+                continue
+            partner = self.env["res.partner"].browse(vals.get("partner_id"))
+            if not partner:
+                continue
+
+            journal = self.env["account.journal"].browse(vals.get("journal_id"))
+            if not journal:
+                journal = self._get_autofacturas_journal()
+                if journal:
+                    vals["journal_id"] = journal.id
+
+            if not self._is_autofacturas_journal(journal):
+                if partner.auto_invoice and vals.get("ref"):
                     vals["name"] = vals["ref"]
-        return super().create(vals_list)
+                continue
+
+            invoice_date = vals.get("invoice_date") or vals.get("date")
+            key = (partner.id, partner._get_autofactura_year(invoice_date))
+            current_ref = pending_partner_sequences.get(key)
+            if not current_ref:
+                current_ref = partner._get_current_autofactura_ref(invoice_date)
+
+            vals["ref"] = current_ref
+            vals["name"] = current_ref
+
+            if not self.env.context.get("skip_autofactura_partner_sequence"):
+                pending_partner_sequences[key] = partner._increment_autofactura_ref(
+                    current_ref
+                )
+
+        moves = super().create(vals_list)
+
+        if not self.env.context.get("skip_autofactura_partner_sequence"):
+            for (partner_id, year), next_ref in pending_partner_sequences.items():
+                partner = self.env["res.partner"].browse(partner_id)
+                if partner.exists():
+                    partner.write({"autofactura_next_ref": next_ref})
+
+        return moves
 
     def write(self, vals):
         """Interceptar write para forzar name = ref en auto_invoice
@@ -61,41 +112,13 @@ class AccountMove(models.Model):
             and self.partner_id
             and self.partner_id.auto_invoice
         ):
-            # Set Journal from settings
-            journal = self.env.company.vendor_bill_import_journal_id
+            journal = self._get_autofacturas_journal()
             if journal:
                 self.journal_id = journal
 
-            # Use the same logic as import wizard: ir.sequence by partner name
-            sequence_code = self.partner_id.name
-            partner_sequence = self.env["ir.sequence"].search(
-                [("code", "=", sequence_code)], limit=1
+            new_ref = self.partner_id._get_current_autofactura_ref(
+                self.invoice_date or self.date
             )
-
-            # Create sequence if it doesn't exist (same logic as wizard)
-            if not partner_sequence:
-                partner_sequence = self.env["ir.sequence"].create(
-                    {
-                        "name": self.partner_id.name,
-                        "code": sequence_code,
-                        "implementation": "no_gap",
-                        "prefix": "CE/%(year)s/",
-                        "padding": 5,
-                        "number_increment": 1,
-                        "number_next_actual": 1,
-                        "company_id": self.company_id.id,
-                    }
-                )
-
-            # Ensure prefix format matches wizard
-            if partner_sequence.prefix != "CE/%(year)s/":
-                partner_sequence.write({"prefix": "CE/%(year)s/"})
-
-            # Get next reference
-            # Note: next_by_code commits the transaction, so the number is consumed.
-            # However, since this is an onchange, it might be consumed even if the user doesn't save.
-            # But the user specifically asked to copy the wizard logic.
-            new_ref = partner_sequence.next_by_id()
 
             self.ref = new_ref
             self.name = new_ref

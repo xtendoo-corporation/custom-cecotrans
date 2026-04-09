@@ -23,9 +23,10 @@ class CecotransVendorBillImport(models.TransientModel):
         """Process the file chosen in the wizard, create bank statement(s) and go to reconciliation."""
         self.ensure_one()
         if self.import_file:
-            invoice_create_ids = self._import_record_data(self.import_file)
+            self._import_record_data(self.import_file)
             # for invoice in invoice_create_ids:
             #     invoice.send_vendor_bill_mail_template()
+            return self._action_open_autofacturas_draft_vendor_bills()
         else:
             raise ValidationError(_("Please select Excel file to import"))
 
@@ -51,6 +52,13 @@ class CecotransVendorBillImport(models.TransientModel):
                     partner_id = (
                         self.env["res.partner"].search([("vat", "=", nif)]).exists()
                     )
+                    if not partner_id:
+                        raise ValidationError(
+                            _(
+                                "No se ha encontrado ningún proveedor con NIF %s."
+                            )
+                            % nif
+                        )
                     vendor_bill_date_cell = sh.cell_value(row, 3)
                     year, month, day, hour, minute, second = xlrd.xldate_as_tuple(
                         vendor_bill_date_cell, book.datemode
@@ -72,10 +80,68 @@ class CecotransVendorBillImport(models.TransientModel):
                     lines_num = []
         return invoice_create_ids
 
+    def _get_autofacturas_journal(self):
+        company = self.env.company
+        journals = self.env["account.journal"].search(
+            [
+                ("name", "=", "Autofacturas"),
+                ("type", "=", "purchase"),
+                ("company_id", "=", company.id),
+            ],
+            limit=2,
+        )
+        if not journals:
+            raise ValidationError(
+                _(
+                    "No se ha encontrado el diario de compras 'Autofacturas' para la compañía %s."
+                )
+                % company.display_name
+            )
+        if len(journals) > 1:
+            raise ValidationError(
+                _(
+                    "Se han encontrado varios diarios de compras llamados 'Autofacturas' para la compañía %s. Revise la configuración."
+                )
+                % company.display_name
+            )
+        return journals
+
+    def _get_import_product(self):
+        product = self.env["product.product"].search(
+            [("default_code", "=", "TRN")],
+            limit=1,
+        )
+        if not product:
+            raise ValidationError(
+                _(
+                    "No se ha encontrado ningún producto con referencia interna 'TRN'."
+                )
+            )
+        return product
+
+    def _action_open_autofacturas_draft_vendor_bills(self):
+        journal = self._get_autofacturas_journal()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Autofacturas"),
+            "res_model": "account.move",
+            "view_mode": "list,form",
+            "target": "current",
+            "domain": [
+                ("move_type", "=", "in_invoice"),
+                ("journal_id", "=", journal.id),
+                ("state", "=", "draft"),
+            ],
+            "context": {
+                "default_move_type": "in_invoice",
+                "default_journal_id": journal.id,
+            },
+        }
+
     @api.model
     def create_vendor_bill(self, partner_id, nif, sh, lines_num, vendor_bill_date):
         vendor_bill_lines = self._prepare_vendor_bill_lines(sh, lines_num, partner_id)
-        ref = self.get_vendor_bill_ref(partner_id)
+        ref = self.get_vendor_bill_ref(partner_id, vendor_bill_date)
         invoice_hash = self._prepare_vendor_bill(
             partner_id, vendor_bill_lines, ref, vendor_bill_date
         )
@@ -89,26 +155,16 @@ class CecotransVendorBillImport(models.TransientModel):
 
     def _prepare_vendor_bill_lines(self, sh, lines, partner_id):
         vendor_bill_lines = []
+        product = self._get_import_product()
         for line in lines:
-            product_name = sh.cell_value(rowx=line, colx=4)
-            if "transporte" in product_name:
-                product = self.env["product.template"].search(
-                    [("default_code", "=", "TRN")], limit=1
+            concept = sh.cell_value(rowx=line, colx=4)
+            line_description = str(concept).strip() if concept is not None else ""
+            taxes = self.env["account.fiscal.position"]
+            fiscal_position = partner_id.property_account_position_id
+            if fiscal_position:
+                taxes = self.env["account.fiscal.position"].search(
+                    [("name", "=", fiscal_position.name)], limit=1
                 )
-            else:
-                product = self.env["product.template"].search(
-                    [("default_code", "=", "GAS")], limit=1
-                )
-            if not product:
-                raise ValidationError(
-                    _(
-                        "Product not found for line %s with product name: %s. Please correct this."
-                        % (line, product_name)
-                    )
-                )
-            taxes = self.env["account.fiscal.position"].search(
-                [("name", "=", partner_id.property_account_position_id.name)], limit=1
-            )
             if taxes:
                 taxes_ids = taxes.tax_ids.filtered(
                     lambda tax: tax.company_id == self.env.user.company_id
@@ -124,7 +180,7 @@ class CecotransVendorBillImport(models.TransientModel):
                     0,
                     {
                         "product_id": product.id,
-                        "name": product_name,
+                        "name": line_description,
                         "account_id": product.property_account_income_id.id,
                         "price_unit": price_unit,
                         "tax_ids": [(6, 0, taxes_ids.ids)],
@@ -142,15 +198,7 @@ class CecotransVendorBillImport(models.TransientModel):
         self, partner_id, vendor_bill_lines, ref, vendor_bill_date
     ):
         self.ensure_one()
-        journal = self.env.company.vendor_bill_import_journal_id
-        if not journal:
-            raise ValidationError(
-                _(
-                    "Por favor, defina un diario de compras para la compañía %s (%s) en la configuración.",
-                    self.env.company.name,
-                    self.env.company.id,
-                )
-            )
+        journal = self._get_autofacturas_journal()
         invoice_vals = {
             "move_type": "in_invoice",
             "ref": ref,
@@ -163,26 +211,5 @@ class CecotransVendorBillImport(models.TransientModel):
         }
         return invoice_vals
 
-    def get_vendor_bill_ref(self, partner_id):
-
-        partner_secuence = self.env["ir.sequence"].search(
-            [("name", "=", partner_id.name)]
-        )
-        if not partner_secuence:
-            self.env["ir.sequence"].create(
-                {
-                    "name": partner_id.name,
-                    "code": partner_id.name,
-                    "implementation": "no_gap",
-                    "prefix": "CE/%(year)s/",
-                    "padding": 5,
-                    "number_increment": 1,
-                    "number_next_actual": 1,
-                }
-            )
-        else:
-            if partner_secuence.prefix != "CE/%(year)s/":
-                partner_secuence.write({"prefix": "CE/%(year)s/"})
-
-        ref = self.env["ir.sequence"].next_by_code(partner_id.name) or "/"
-        return ref
+    def get_vendor_bill_ref(self, partner_id, vendor_bill_date):
+        return partner_id._get_current_autofactura_ref(vendor_bill_date)

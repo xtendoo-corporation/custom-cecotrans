@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_autofactura_sequence" model="ir.ui.view">
+        <field name="name">res.partner.form.autofactura.sequence</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="autofactura_next_ref" readonly="1" invisible="supplier_rank == 0" />
+            </field>
+        </field>
+    </record>
+</odoo>
+
