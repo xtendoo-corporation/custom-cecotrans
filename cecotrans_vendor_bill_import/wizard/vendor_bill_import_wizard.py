@@ -146,10 +146,14 @@ class CecotransVendorBillImport(models.TransientModel):
             partner_id, vendor_bill_lines, ref, vendor_bill_date
         )
         if invoice_hash:
-            invoice_create = self.env["account.move"].with_context(
-                reserve_autofactura_move_name=True
-            ).create(invoice_hash)
-            invoice_create._onchange_partner_id()
+            invoice_create = self.env["account.move"].create(invoice_hash)
+            if (
+                invoice_create.move_type == "in_invoice"
+                and invoice_create.journal_id
+                and invoice_create.journal_id.name == "Autofacturas"
+                and invoice_create.name in (False, "/")
+            ):
+                invoice_create._set_next_sequence()
             partner_id._advance_autofactura_ref_from_used_ref(ref)
             # No publicar automáticamente: dejar la factura en borrador para revisión/manual posting
             # invoice_create.action_post()  # removido intencionalmente
