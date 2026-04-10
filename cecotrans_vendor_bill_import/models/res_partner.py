@@ -13,7 +13,6 @@ class ResPartner(models.Model):
 
     autofactura_next_ref = fields.Char(
         string="Próxima autofactura",
-        readonly=True,
         copy=False,
         default=lambda self: self._default_autofactura_next_ref(),
         help="Siguiente número que se utilizará al crear una autofactura en el diario Autofacturas para este proveedor.",
@@ -85,6 +84,17 @@ class ResPartner(models.Model):
                     )
                 }
             )
+        return True
+
+    def _advance_autofactura_ref_from_used_ref(self, used_ref, step=1):
+        self.ensure_one()
+        self.write(
+            {
+                "autofactura_next_ref": self._increment_autofactura_ref(
+                    used_ref, step=step
+                )
+            }
+        )
         return True
 
     def _initialize_autofactura_next_ref(self):

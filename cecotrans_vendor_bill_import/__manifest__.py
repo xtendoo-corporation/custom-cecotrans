@@ -16,6 +16,7 @@
     "license": "AGPL-3",
     "data": [
         "security/ir.model.access.csv",
+        "data/account_move_data.xml",
         "data/res_partner_data.xml",
         "views/res_config_settings_view.xml",
         "views/res_partner_view.xml",
